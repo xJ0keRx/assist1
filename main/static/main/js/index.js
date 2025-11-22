@@ -599,6 +599,7 @@ function getLotteryIcon(type) {
 }
 
 // Основная функция: отрендерить лотереи с учетом истории и фильтров
+// Основная функция: отрендерить лотереи с учетом истории и фильтров
 function renderAdaptiveLotteries() {
   const grid = document.getElementById("lotteriesGrid");
   grid.innerHTML = "";
@@ -642,19 +643,6 @@ function renderAdaptiveLotteries() {
                 <div class="lottery-date">${lottery.drawDate}</div>
             </div>
             <div class="lottery-body">
-                <div class="lottery-tags">
-                    ${lottery.tags
-                      .map((tag) => {
-                        const tagClass =
-                          tag === "hot"
-                            ? "hot"
-                            : tag === "popular"
-                            ? "popular"
-                            : "";
-                        return `<span class="tag ${tagClass}">${tag}</span>`;
-                      })
-                      .join("")}
-                </div>
                 <div class="lottery-stats">
                     <div class="stat-item">
                         <span class="stat-label">Цена</span>
@@ -733,6 +721,77 @@ function showMoreInstantLotteries() {
     showMoreContainer.classList.add("hidden");
   }
 }
+// ========== МОДАЛЬНЫЕ ОКНА ==========
+// Показ модального окна
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'flex';
+}
+
+// Скрытие модального окна
+function hideModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'none';
+}
+
+// Проверка, новый ли пользователь
+function isNewUser() {
+    return !localStorage.getItem('userVisited');
+}
+
+// Отметить пользователя как вернувшегося
+function markUserAsReturning() {
+    localStorage.setItem('userVisited', 'true');
+}
+
+// Инициализация модальных окон при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, новый ли пользователь
+    if (isNewUser()) {
+        // Показываем приветственное окно для новых пользователей
+        setTimeout(() => {
+            showModal('welcomeModal');
+        }, 1200);
+    }
+
+    // Обработчики для модального окна приветствия
+    document.getElementById('newUserBtn').addEventListener('click', function () {
+        markUserAsReturning();
+        hideModal('welcomeModal');
+        // Если пользователь ответил "Да, я новичок" - перекидываем на опрос
+        setTimeout(() => {
+            window.location.href = '/quests';
+        }, 300);
+    });
+
+    document.getElementById('oldUserBtn').addEventListener('click', function () {
+        markUserAsReturning();
+        hideModal('welcomeModal');
+        // Для старых пользователей тоже можно перекинуть на опрос или оставить на сайте
+        // window.location.href = '/survey'; // раскомментируй если нужно
+    });
+
+    // Закрытие модального окна при клике на оверлей
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideModal(this.id);
+            }
+        });
+    });
+
+    // Закрытие модального окна при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                if (modal.style.display === 'flex') {
+                    hideModal(modal.id);
+                }
+            });
+        }
+    });
+});
 // Инициализация
 document.addEventListener("DOMContentLoaded", () => {
   // Показываем согласие на cookies
