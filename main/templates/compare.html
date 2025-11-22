@@ -1,0 +1,192 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block body-start %}
+<body>
+{% endblock %}
+{% block content%}
+   <main>
+        <div class="container">
+            <!-- Заголовок страницы -->
+            <section>
+                <h1 class="page-title">Сравнение лучших лотерейных предложений</h1>
+                <p class="page-subtitle">Мы выбрали три самых выгодных лотереи и сравнили их по ключевым характеристикам, чтобы помочь вам сделать правильный выбор</p>
+            </section>
+
+            <!-- Секция сравнения -->
+            <section class="comparison-section">
+                <div class="comparison-grid">
+                    <!-- Карточка лотереи 1 -->
+                    <div class="lottery-card">
+                        <div class="lottery-header">
+                            <div class="lottery-title">Русское Лото</div>
+                            <div class="lottery-date">18:00 сегодня</div>
+                        </div>
+                        <div class="lottery-body">
+                            <p>Самая известная лотерея в России с многолетней историей и крупными джекпотами.</p>
+                            
+                            <div class="characteristics-list">
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Цена билета:</span>
+                                        <span class="characteristic-value">100 ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-price" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Размер джекпота:</span>
+                                        <span class="characteristic-value">50 млн ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-jackpot" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Вероятность выигрыша:</span>
+                                        <span class="characteristic-value">Высокая</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-chance" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Рейтинг:</span>
+                                        <span class="characteristic-value">4.8/5</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-rating" style="width: 96%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lottery-actions">
+                                <button class="btn btn-secondary">Подробнее</button>
+                                <button class="btn btn-primary">Купить билет</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Карточка лотереи 2 -->
+                    <div class="lottery-card">
+                        <div class="lottery-header">
+                            <div class="lottery-title">Гослото 6/45</div>
+                            <div class="lottery-date">19:30 завтра</div>
+                        </div>
+                        <div class="lottery-body">
+                            <p>Классическая числовая лотерея с простыми правилами и высокими шансами на выигрыш.</p>
+                            
+                            <div class="characteristics-list">
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Цена билета:</span>
+                                        <span class="characteristic-value">150 ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-price" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Размер джекпота:</span>
+                                        <span class="characteristic-value">30 млн ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-jackpot" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Вероятность выигрыша:</span>
+                                        <span class="characteristic-value">Средняя</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-chance" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Рейтинг:</span>
+                                        <span class="characteristic-value">4.5/5</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-rating" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lottery-actions">
+                                <button class="btn btn-secondary">Подробнее</button>
+                                <button class="btn btn-primary">Купить билет</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Карточка лотереи 3 -->
+                    <div class="lottery-card">
+                        <div class="lottery-header">
+                            <div class="lottery-title">Спортлото</div>
+                            <div class="lottery-date">20:00 сегодня</div>
+                        </div>
+                        <div class="lottery-body">
+                            <p>Лотерея для любителей спорта с быстрыми розыгрышами и разнообразными призовыми категориями.</p>
+                            
+                            <div class="characteristics-list">
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Цена билета:</span>
+                                        <span class="characteristic-value">120 ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-price" style="width: 24%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Размер джекпота:</span>
+                                        <span class="characteristic-value">25 млн ₽</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-jackpot" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Вероятность выигрыша:</span>
+                                        <span class="characteristic-value">Выше средней</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-chance" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="characteristic-item">
+                                    <div class="characteristic-header">
+                                        <span class="characteristic-name">Рейтинг:</span>
+                                        <span class="characteristic-value">4.6/5</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-rating" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="lottery-actions">
+                                <button class="btn btn-secondary">Подробнее</button>
+                                <button class="btn btn-primary">Купить билет</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+
+
+
+    {% block js %}
+    <script src="{% static 'main/js/compare.js' %}"></script>
+    {% endblock %}

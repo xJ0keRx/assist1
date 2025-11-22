@@ -14,3 +14,6 @@ def index(request):
 
 def quests(request):
     return render(request, 'quests.html')
+
+def compare(request):
+    return render(request, 'compare.html')
