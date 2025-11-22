@@ -21,27 +21,6 @@ def format_prize(prize_amount):
     
     return ' '.join(reversed(formatted)) + ' ₽'
 
-def download_image(url, folder, filename):
-    """Скачивает изображение и сохраняет в указанную папку"""
-    try:
-        response = requests.get(url, stream=True)
-        response.raise_for_status()
-        
-        # Создаем папку если её нет
-        os.makedirs(folder, exist_ok=True)
-        
-        # Полный путь к файлу
-        filepath = os.path.join(folder, filename)
-        
-        # Сохраняем изображение
-        with open(filepath, 'wb') as file:
-            for chunk in response.iter_content(chunk_size=8192):
-                file.write(chunk)
-        
-        return filepath
-    except Exception as e:
-        print(f"Ошибка при скачивании {url}: {e}")
-        return None
 
 
 def truncate(model):
@@ -64,7 +43,10 @@ GAMES = {
     "klava": "Клава",
     "5x36plus": "5 из 36 Плюс",
     "6x45": "6 из 45",
-    "7x49": "7 из 49"
+    "7x49": "7 из 49",
+    "rocketbingo": 'Лото Экспресс',
+    "fzp": 'Золотая подкова'
+
 }
 
 def parse_timestamp(timestamp_int):
@@ -122,7 +104,7 @@ def update_lotteries_from_api():
                 # Подготовка данных для модели
                 lottery_data = {
                     'name': GAMES[game_code],
-                    'game_type': 'draw',
+                    'game_type': 'draw' if game_code not in ['gzhl', 'ruslotto', 'rocketbingo', 'fzp', 'udachanascdachu'] else 'bingo',
                     'bet_cost': format_prize(next_draw.get('betCost')),
                     'super_prize': format_prize(next_draw.get('superPrize')),
                     'start_date': parse_timestamp(next_draw.get('startSalesDate')),

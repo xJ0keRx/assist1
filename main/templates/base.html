@@ -24,35 +24,7 @@
                     <button onclick="alert('Поиск активирован')">🔍</button>
                 </div>
 
-                <div class="header-actions">
-                    <button class="btn btn-outline">Профиль</button>
-                    <button class="btn btn-primary">Купить</button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    </head>
-<body>
-    <div class="gradient-bg"></div>
-    <div class="grid-overlay"></div>
-
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">🎯 LottoNavigator</div>
                 
-                <div class="search-box">
-                    <input type="text" placeholder="Поиск лотерей..." id="searchInput">
-                    <button onclick="alert('Поиск активирован')">🔍</button>
-                </div>
-
-                <div class="header-actions">
-                    <button class="btn btn-outline">Профиль</button>
-                    <button class="btn btn-primary">Купить</button>
-                </div>
             </div>
         </div>
     </header>
@@ -99,7 +71,6 @@
                 </div>
             </section>
 
-            <!-- Категории с улучшенным блюр-эффектом -->
             <section class="categories-section">
                 <h2 class="section-title">Категории</h2>
                 <div class="categories-container">
@@ -134,19 +105,12 @@
                 </div>
             </section>
 
-            <!-- Сетка лотерей -->
             <section>
                 <h2 class="section-title">Популярные лотереи</h2>
                 <div class="lotteries-grid" id="lotteriesGrid">
-                    <!-- Карточки будут добавлены JS -->
                 </div>
             </section>
 
-            <!-- Добавьте этот код после раздела "Популярные лотереи" -->
-
-<!-- Моментальные лотереи -->
-<!-- Моментальные лотереи -->
-<!-- Моментальные лотереи -->
 <!-- Моментальные лотереи -->
 <section>
     <h2 class="section-title">Моментальные лотереи</h2>
@@ -161,72 +125,13 @@
         </div>
         {% endfor %}
     </div>
+    
+    <div class="show-more-container" id="showMoreContainer">
+        <button class="btn btn-outline show-more-btn" onclick="showMoreInstantLotteries()" id="showMoreBtn">
+            Показать еще
+        </button>
+    </div>
 </section>
-
-        <!-- <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Золотой Кубок')">
-            <div class="instant-lottery-image">
-                <img src="https://via.placeholder.com/180x120/f59e0b/ffffff?text=🏆" alt="Золотой Кубок" class="lottery-img">
-            </div>
-            <div class="instant-lottery-content">
-                <h3 class="instant-lottery-title">Золотой Кубок</h3>
-                <div class="instant-lottery-price">100 ₽</div>
-                <div class="instant-lottery-tags">
-                    <span class="instant-tag popular">Популярная</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Счастливые 7')">
-            <div class="instant-lottery-image">
-                <img src="https://via.placeholder.com/180x120/10b981/ffffff?text=7️⃣" alt="Счастливые 7" class="lottery-img">
-            </div>
-            <div class="instant-lottery-content">
-                <h3 class="instant-lottery-title">Счастливые 7</h3>
-                <div class="instant-lottery-price">70 ₽</div>
-                <div class="instant-lottery-tags">
-                    <span class="instant-tag">Классика</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Фортуна Х')">
-            <div class="instant-lottery-image">
-                <img src="https://via.placeholder.com/180x120/ec4899/ffffff?text=❌" alt="Фортуна Х" class="lottery-img">
-            </div>
-            <div class="instant-lottery-content">
-                <h3 class="instant-lottery-title">Фортуна Х</h3>
-                <div class="instant-lottery-price">150 ₽</div>
-                <div class="instant-lottery-tags">
-                    <span class="instant-tag hot">Горячая</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Быстрая Победа')">
-            <div class="instant-lottery-image">
-                <img src="https://via.placeholder.com/180x120/06b6d4/ffffff?text=⚡" alt="Быстрая Победа" class="lottery-img">
-            </div>
-            <div class="instant-lottery-content">
-                <h3 class="instant-lottery-title">Быстрая Победа</h3>
-                <div class="instant-lottery-price">80 ₽</div>
-                <div class="instant-lottery-tags">
-                    <span class="instant-tag">Экспресс</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Алмазный Рай')">
-            <div class="instant-lottery-image">
-                <img src="https://via.placeholder.com/180x120/8b5cf6/ffffff?text=💎" alt="Алмазный Рай" class="lottery-img">
-            </div>
-            <div class="instant-lottery-content">
-                <h3 class="instant-lottery-title">Алмазный Рай</h3>
-                <div class="instant-lottery-price">200 ₽</div>
-                <div class="instant-lottery-tags">
-                    <span class="instant-tag premium">Премиум</span>
-                </div>
-            </div>
-        </div> -->
     </div>
 </section>
 
@@ -258,6 +163,7 @@
             </section>
         </div>
     </main>
+
 <script src="{% static 'main/js/index.js' %}"></script>
 </body>
 </html>
