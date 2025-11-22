@@ -90,6 +90,187 @@
             align-items: center;
             gap: 2rem;
         }
+        /* Моментальные лотереи - уменьшенные карточки */
+/* Моментальные лотереи - уменьшенные карточки */
+.instant-lotteries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.instant-lottery-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.75));
+    border: 1.5px solid rgba(99, 102, 241, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.instant-lottery-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(6, 182, 212, 0.5);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2), 0 0 30px rgba(6, 182, 212, 0.1);
+}
+
+.instant-lottery-image {
+    height: 120px;
+    background: rgba(99, 102, 241, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.lottery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.instant-lottery-card:hover .lottery-img {
+    transform: scale(1.05);
+}
+
+.instant-lottery-content {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.instant-lottery-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.instant-lottery-price {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.instant-lottery-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: auto;
+}
+
+.instant-tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(79, 70, 229, 0.15);
+    border: 1px solid rgba(79, 70, 229, 0.3);
+    border-radius: 8px;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.instant-tag.hot {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.instant-tag.popular {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+}
+
+.instant-tag.new {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: rgba(236, 72, 153, 0.3);
+    color: #f472b6;
+}
+
+.instant-tag.premium {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #fcd34d;
+}
+
+/* Адаптивность для моментальных лотерей */
+@media (max-width: 768px) {
+    .instant-lotteries-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.8rem;
+    }
+    
+    .instant-lottery-image {
+        height: 100px;
+    }
+    
+    .instant-lottery-content {
+        padding: 0.8rem;
+    }
+    
+    .instant-lottery-title {
+        font-size: 0.9rem;
+    }
+    
+    .instant-lottery-price {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .instant-lotteries-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Адаптивность для моментальных лотерей */
+@media (max-width: 768px) {
+    .instant-lotteries-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.8rem;
+    }
+    
+    .instant-lottery-image {
+        height: 100px;
+    }
+    
+    .image-placeholder {
+        font-size: 2.5rem;
+    }
+    
+    .instant-lottery-content {
+        padding: 0.8rem;
+    }
+    
+    .instant-lottery-title {
+        font-size: 0.9rem;
+    }
+    
+    .instant-lottery-price {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .instant-lotteries-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 
         /* Исправление для смайликов */
         .logo,
@@ -934,6 +1115,96 @@
                 </div>
             </section>
 
+            <!-- Добавьте этот код после раздела "Популярные лотереи" -->
+
+<!-- Моментальные лотереи -->
+<!-- Моментальные лотереи -->
+<section>
+    <h2 class="section-title">Моментальные лотереи</h2>
+    <div class="instant-lotteries-grid" id="instantLotteriesGrid">
+        <!-- Карточки моментальных лотерей -->
+         {% for el in result %}
+        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/map/buy', 'Моментальная Удача')">
+            <div class="instant-lottery-image">
+                <img src="{{ el.preview_img }}" alt="{{el.name}}" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">{{ el.name }}</h3>
+                <div class="instant-lottery-price">{{ el.bet_cost }}</div>
+                <div class="instant-lottery-tags">
+                    <!-- <span class="instant-tag new">Новая</span> -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Золотой Кубок')">
+            <div class="instant-lottery-image">
+                <img src="https://via.placeholder.com/180x120/f59e0b/ffffff?text=🏆" alt="Золотой Кубок" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">Золотой Кубок</h3>
+                <div class="instant-lottery-price">100 ₽</div>
+                <div class="instant-lottery-tags">
+                    <span class="instant-tag popular">Популярная</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Счастливые 7')">
+            <div class="instant-lottery-image">
+                <img src="https://via.placeholder.com/180x120/10b981/ffffff?text=7️⃣" alt="Счастливые 7" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">Счастливые 7</h3>
+                <div class="instant-lottery-price">70 ₽</div>
+                <div class="instant-lottery-tags">
+                    <span class="instant-tag">Классика</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Фортуна Х')">
+            <div class="instant-lottery-image">
+                <img src="https://via.placeholder.com/180x120/ec4899/ffffff?text=❌" alt="Фортуна Х" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">Фортуна Х</h3>
+                <div class="instant-lottery-price">150 ₽</div>
+                <div class="instant-lottery-tags">
+                    <span class="instant-tag hot">Горячая</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Быстрая Победа')">
+            <div class="instant-lottery-image">
+                <img src="https://via.placeholder.com/180x120/06b6d4/ffffff?text=⚡" alt="Быстрая Победа" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">Быстрая Победа</h3>
+                <div class="instant-lottery-price">80 ₽</div>
+                <div class="instant-lottery-tags">
+                    <span class="instant-tag">Экспресс</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="instant-lottery-card" onclick="openLottery('https://www.stoloto.ru/instant/game', 'Алмазный Рай')">
+            <div class="instant-lottery-image">
+                <img src="https://via.placeholder.com/180x120/8b5cf6/ffffff?text=💎" alt="Алмазный Рай" class="lottery-img">
+            </div>
+            <div class="instant-lottery-content">
+                <h3 class="instant-lottery-title">Алмазный Рай</h3>
+                <div class="instant-lottery-price">200 ₽</div>
+                <div class="instant-lottery-tags">
+                    <span class="instant-tag premium">Премиум</span>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</section>
+
             <!-- Рекомендации -->
             <section class="recommendations-section">
                 <h2 class="section-title">Смешанные предложения</h2>
@@ -979,6 +1250,34 @@ const lotteries = [
         url: 'https://www.stoloto.ru/ruslotto/game',
         userRating: null
     },
+    // Добавьте эти объекты в массив lotteries
+{ 
+    name: 'Моментальная Удача', 
+    price: 50, 
+    jackpot: '1 млн ₽', 
+    rating: 4.2, 
+    drawDate: 'Мгновенно', 
+    tags: ['моментальное', 'new'], 
+    probability: '1:10', 
+    type: 'моментальное', 
+    frequency: 'час',
+    url: 'https://www.stoloto.ru/ml/game',
+    userRating: null
+},
+{ 
+    name: 'Золотой Кубок', 
+    price: 100, 
+    jackpot: '2 млн ₽', 
+    rating: 4.5, 
+    drawDate: 'Мгновенно', 
+    tags: ['моментальное', 'popular'], 
+    probability: '1:15', 
+    type: 'моментальное', 
+    frequency: 'час',
+    url: 'https://www.stoloto.ru/ml/game',
+    userRating: null
+},
+// ... остальные моментальные лотереи
     { 
         name: 'Гослото 6/45', 
         price: 150, 

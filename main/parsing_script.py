@@ -176,8 +176,8 @@ def update_lotteries_from_api():
         print('\n=== ЛОТЕРЕИ И СУПЕРПРИЗЫ ===')
         
         # Создаем папку для изображений
-        images_folder = 'lottery_images'
-        os.makedirs(images_folder, exist_ok=True)
+        # images_folder = 'lottery_images'
+        # os.makedirs(images_folder, exist_ok=True)
         
         # Парсим momentCards
         for i, lottery in enumerate(data_json["data"][0]["momentCards"]):
@@ -210,7 +210,7 @@ def update_lotteries_from_api():
             )
                 
             print(f'\nКоличество лотерей: {len(data_json["data"][0]["momentCards"])}')
-            print(f'Изображения сохранены в папку: {images_folder}')
+            # print(f'Изображения сохранены в папку: {images_folder}')
 
 
 
