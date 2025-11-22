@@ -1,0 +1,139 @@
+{% extends 'base.html'%}
+{% block title %} lol {% endblock %}
+{% block content %}
+<main>
+    
+        <div class="container">
+            <!-- Героическая секция с поиском (Booking-стиль) -->
+            <section class="hero-search">
+                <h1> Найдите свою удачу</h1>
+                <p>Система умного подбора анализирует вашу историю и рекомендует лучшие лотереи</p>
+                
+                <div class="search-filters booking-style">
+                    <div class="filter-group">
+                        <label>Тип лотереи</label>
+                        <select id="filterType" onchange="applyFilters()">
+                            <option value="">Все типы</option>
+                            <option value="числовое">Числовые</option>
+                            <option value="быстрое">Быстрые розыгрыши</option>
+                            <option value="классическое">Классические</option>
+                            <option value="моментальное">Моментальные</option>
+                            <option value="премиум">Премиум</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Цена билета</label>
+                        <select id="filterPrice" onchange="applyFilters()">
+                            <option value="">Любая цена</option>
+                            <option value="50-100">50-100 ₽</option>
+                            <option value="100-200">100-200 ₽</option>
+                            <option value="200+">200+ ₽</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Частота розыгрышей</label>
+                        <select id="filterFrequency" onchange="applyFilters()">
+                            <option value="">Любая</option>
+                            <option value="час">Каждый час</option>
+                            <option value="день">Ежедневно</option>
+                            <option value="неделя">2-3 раза в неделю</option>
+                            <option value="месяц">Раз в месяц</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="categories-section">
+                <h2 class="section-title">Категории</h2>
+                <div class="categories-container">
+                    <div class="categories-blur-bg active all" id="categoriesBlur"></div>
+                    <div class="blur-particles" id="blurParticles"></div>
+                    <div class="categories-scroll">
+                        <div class="category-badge active" data-category="all" onclick="filterByCategory(this)">
+                            Все лотереи
+                            <div class="selection-indicator"></div>
+                        </div>
+                        <div class="category-badge" data-category="hot" onclick="filterByCategory(this)">
+                            🔥 Горячие
+                            <div class="selection-indicator"></div>
+                        </div>
+                        <div class="category-badge" data-category="popular" onclick="filterByCategory(this)">
+                            ⭐ Популярные
+                            <div class="selection-indicator"></div>
+                        </div>
+                        <div class="category-badge" data-category="jackpot" onclick="filterByCategory(this)">
+                            💰 Высокий джекпот
+                            <div class="selection-indicator"></div>
+                        </div>
+                        <div class="category-badge" data-category="new" onclick="filterByCategory(this)">
+                            🆕 Новые
+                            <div class="selection-indicator"></div>
+                        </div>
+                        <div class="category-badge" data-category="recommended" onclick="filterByCategory(this)">
+                            🎯 Рекомендуемые
+                            <div class="selection-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Популярные лотереи</h2>
+                <div class="lotteries-grid" id="lotteriesGrid">
+                </div>
+            </section>
+
+<!-- Моментальные лотереи -->
+<section>
+    <h2 class="section-title">Моментальные лотереи</h2>
+    <div class="instant-images-grid" id="instantLotteriesGrid">
+        <!-- Карточки моментальных лотерей -->
+        {% for el in result %}
+        <div class="instant-image-card" onclick="openLottery('https://www.stoloto.ru/map/buy', '{{el.name}}')">
+            <div class="instant-image-container">
+                <img src="{{ el.preview_img }}" alt="{{el.name}}" class="instant-img">
+                <div class="instant-price-badge">{{ el.bet_cost }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="show-more-container" id="showMoreContainer">
+        <button class="btn btn-outline show-more-btn" onclick="showMoreInstantLotteries()" id="showMoreBtn">
+            Показать еще
+        </button>
+    </div>
+</section>
+    </div>
+</section>
+
+            <!-- Рекомендации -->
+            <section class="recommendations-section">
+                <h2 class="section-title">Смешанные предложения</h2>
+                <div class="recommendation-grid">
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">📊</div>
+                        <div class="recommendation-text">Аналитика</div>
+                        <div class="recommendation-desc">Просмотр статистики выигрышей</div>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">🎰</div>
+                        <div class="recommendation-text">Автоподбор</div>
+                        <div class="recommendation-desc">ИИ подберет лучший вариант</div>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">🏆</div>
+                        <div class="recommendation-text">Топ Выигрыши</div>
+                        <div class="recommendation-desc">Самые крупные выигрыши сегодня</div>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">⏰</div>
+                        <div class="recommendation-text">Расписание</div>
+                        <div class="recommendation-desc">Время розыгрышей лотерей</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+{% endblock %}
