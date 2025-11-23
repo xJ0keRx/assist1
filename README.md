@@ -57,13 +57,13 @@
 git clone https://github.com/hackathonsrus/Final_kodovye_koni_206
 cd Final_kodovye_koni_206
 
-#создание .env файла с таким текстом:
-SECRET-KEY=django-insecure-)k2r7k&@*c(*o*e@)-7=ze$o#zxoho7pw3_kj8)56^ajcl&)b#
-POSTGRES_DBNAME=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=root
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
+#создание .env файла с такими полями:
+SECRET-KEY=
+POSTGRES_DBNAME=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_HOST=
+POSTGRES_PORT=
 
 # Установка зависимостей
 pip install -r requirements.txt
