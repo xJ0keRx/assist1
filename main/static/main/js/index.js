@@ -1,137 +1,252 @@
-const lotteries = [
-  {
-    name: "Русское Лото",
-    price: 100,
-    jackpot: "50 млн ₽",
-    rating: 4.8,
-    drawDate: "Каждый день",
-    tags: ["популярное", "hot"],
-    probability: "1:45",
-    type: "классическое",
-    frequency: "день",
-    url: "https://www.stoloto.ru/ruslotto/game",
-    userRating: null,
-  },
-  // Добавьте эти объекты в массив lotteries
-  {
-    name: "Моментальная Удача",
-    price: 50,
-    jackpot: "1 млн ₽",
-    rating: 4.2,
-    drawDate: "Мгновенно",
-    tags: ["моментальное", "new"],
-    probability: "1:10",
-    type: "моментальное",
-    frequency: "час",
-    url: "https://www.stoloto.ru/ml/game",
-    userRating: null,
-  },
-  {
-    name: "Золотой Кубок",
-    price: 100,
-    jackpot: "2 млн ₽",
-    rating: 4.5,
-    drawDate: "Мгновенно",
-    tags: ["моментальное", "popular"],
-    probability: "1:15",
-    type: "моментальное",
-    frequency: "час",
-    url: "https://www.stoloto.ru/ml/game",
-    userRating: null,
-  },
-  // ... остальные моментальные лотереи
-  {
-    name: "Гослото 6/45",
-    price: 150,
-    jackpot: "30 млн ₽",
-    rating: 4.5,
-    drawDate: "Вт, Пт",
-    tags: ["числовое", "popular"],
-    probability: "1:8.1M",
-    type: "числовое",
-    frequency: "неделя",
-    url: "https://www.stoloto.ru/6x45/game",
-    userRating: null,
-  },
-  {
-    name: "Спортлото",
-    price: 120,
-    jackpot: "25 млн ₽",
-    rating: 4.6,
-    drawDate: "Ежедневно",
-    tags: ["классическое"],
-    probability: "1:3.2M",
-    type: "классическое",
-    frequency: "день",
-    url: "https://www.stoloto.ru/sportloto/game",
-    userRating: null,
-  },
-  {
-    name: "Рапидо",
-    price: 80,
-    jackpot: "15 млн ₽",
-    rating: 4.4,
-    drawDate: "Каждый час",
-    tags: ["быстрое", "hot"],
-    probability: "1:500K",
-    type: "быстрое",
-    frequency: "час",
-    url: "https://www.stoloto.ru/rapido/game",
-    userRating: null,
-  },
-  {
-    name: "ТриумфЛото",
-    price: 200,
-    jackpot: "100 млн ₽",
-    rating: 4.9,
-    drawDate: "Пн, Сб",
-    tags: ["премиум", "popular"],
-    probability: "1:10M",
-    type: "премиум",
-    frequency: "неделя",
-    url: "https://www.stoloto.ru/triumph/game",
-    userRating: null,
-  },
-  {
-    name: "Кено",
-    price: 50,
-    jackpot: "5 млн ₽",
-    rating: 4.3,
-    drawDate: "Круглосуточно",
-    tags: ["моментальное"],
-    probability: "1:100K",
-    type: "моментальное",
-    frequency: "час",
-    url: "https://www.stoloto.ru/keno/game",
-    userRating: null,
-  },
-  {
-    name: "МегаЛот",
-    price: 110,
-    jackpot: "60 млн ₽",
-    rating: 4.7,
-    drawDate: "Ежедневно",
-    tags: ["популярное"],
-    probability: "1:50",
-    type: "классическое",
-    frequency: "день",
-    url: "https://www.stoloto.ru/megalot/game",
-    userRating: null,
-  },
-  {
-    name: "ПриватЛот",
-    price: 99,
-    jackpot: "40 млн ₽",
-    rating: 4.4,
-    drawDate: "Вс, Чт",
-    tags: ["популярное"],
-    probability: "1:40",
-    type: "числовое",
-    frequency: "неделя",
-    url: "https://www.stoloto.ru/privatlot/game",
-    userRating: null,
-  },
-];
+function getLotteriesData() {
+    const gridElement = document.getElementById('lotteriesGrid');
+    if (gridElement && gridElement.dataset.lotteries) {
+        return JSON.parse(gridElement.dataset.lotteries);
+    }
+    return []; // или fallback на статические данные
+}
+
+const lotteries = getLotteriesData();
+// ========== ФУНКЦИОНАЛ СРАВНЕНИЯ ==========
+
+// Получить список лотерей для сравнения
+function getComparisonList() {
+    const consent = getStorage("cookieConsent");
+    if (consent === false) {
+        return [];
+    }
+    
+    return getStorage("comparisonList") || [];
+}
+
+// Сохранить список сравнения
+function saveComparisonList(list) {
+    setStorage("comparisonList", list);
+}
+
+// Добавить/удалить лотерею из сравнения
+function toggleComparison(lotteryName) {
+    let comparisonList = getComparisonList();
+    const index = comparisonList.indexOf(lotteryName);
+    
+    if (index > -1) {
+        // Удалить из сравнения
+        comparisonList.splice(index, 1);
+    } else {
+        // Добавить в сравнение
+        comparisonList.push(lotteryName);
+    }
+    
+    saveComparisonList(comparisonList);
+    updateComparisonUI();
+}
+
+// Обновить UI сравнения
+function updateComparisonUI() {
+    const comparisonList = getComparisonList();
+    const compareBtn = document.getElementById("compareBtn");
+    const compareCount = comparisonList.length;
+    
+    // Обновляем кнопки добавления в сравнение
+    document.querySelectorAll('.compare-btn').forEach(btn => {
+        const lotteryName = btn.getAttribute('data-lottery');
+        if (comparisonList.includes(lotteryName)) {
+            btn.innerHTML = '🗑️ Убрать из сравнения';
+            btn.classList.add('active');
+        } else {
+            btn.innerHTML = '⚖️ Добавить к сравнению';
+            btn.classList.remove('active');
+        }
+    });
+    
+    // Обновляем кнопку перехода к сравнению
+    if (compareCount > 0) {
+        compareBtn.classList.remove('hidden');
+        compareBtn.innerHTML = `⚖️ Перейти к сравнению (${compareCount})`;
+        
+        // Показываем уведомление если выбрано 2 или больше
+        if (compareCount >= 2) {
+            compareBtn.classList.add('pulse');
+        } else {
+            compareBtn.classList.remove('pulse');
+        }
+    } else {
+        compareBtn.classList.add('hidden');
+    }
+}
+
+// Переход к странице сравнения
+function goToCompare() {
+    const comparisonList = getComparisonList();
+    if (comparisonList.length < 2) {
+        alert('Для сравнения нужно выбрать хотя бы 2 лотереи');
+        return;
+    }
+    
+    // Показываем модальное окно с выбранными лотереями
+    showComparisonModal();
+}
+
+// Показать модальное окно сравнения
+function showComparisonModal() {
+    const comparisonList = getComparisonList();
+    const comparedLotteries = lotteries.filter(lottery => 
+        comparisonList.includes(lottery.name)
+    );
+
+    const modal = document.createElement("div");
+    modal.className = "comparison-modal";
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        backdrop-filter: blur(10px);
+    `;
+
+    modal.innerHTML = `
+        <div class="comparison-card" style="
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 90%;
+            max-height: 90vh;
+            width: 800px;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+        ">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="
+                    font-family: 'Orbitron', sans-serif;
+                    font-size: 1.5rem;
+                    background: linear-gradient(135deg, var(--primary), var(--secondary));
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                ">Сравнение лотерей</h3>
+                <button class="btn btn-outline close-comparison" style="padding: 0.5rem 1rem;">✕</button>
+            </div>
+            
+            <div class="comparison-table">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.3);">
+                            <th style="padding: 1rem; text-align: left; color: var(--text);">Характеристика</th>
+                            ${comparedLotteries.map(lottery => `
+                                <th style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.name}
+                                </th>
+                            `).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Цена билета</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.price} ₽
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Джекпот</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.jackpot}
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Шанс выигрыша</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.probability}
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Рейтинг</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.rating} ⭐
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Тип</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.type}
+                                </td>
+                            `).join('')}
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
+                            <td style="padding: 1rem; color: var(--text-secondary);">Частота розыгрышей</td>
+                            ${comparedLotteries.map(lottery => `
+                                <td style="padding: 1rem; text-align: center; color: var(--text);">
+                                    ${lottery.drawDate}
+                                </td>
+                            `).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <button class="btn btn-outline clear-comparison" style="padding: 0.75rem 1.5rem;">
+                    🗑️ Очистить сравнение
+                </button>
+                <button class="btn btn-primary close-comparison" style="padding: 0.75rem 1.5rem;">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Обработчики событий
+    modal.querySelector('.close-comparison').addEventListener('click', function() {
+        modal.remove();
+    });
+
+    modal.querySelector('.clear-comparison').addEventListener('click', function() {
+        if (confirm('Вы уверены, что хотите очистить список сравнения?')) {
+            saveComparisonList([]);
+            updateComparisonUI();
+            modal.remove();
+        }
+    });
+
+    // Закрытие по клику на оверлей
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// Создать HTML для кнопки сравнения
+function createCompareButtonHTML(lotteryName) {
+    const comparisonList = getComparisonList();
+    const isInComparison = comparisonList.includes(lotteryName);
+    
+    return `
+        <button class="btn btn-outline compare-btn hover-only" 
+                data-lottery="${lotteryName}"
+                onclick="toggleComparison('${lotteryName}')">
+            ${isInComparison ? '🗑️ Убрать из сравнения' : '⚖️ Добавить к сравнению'}
+        </button>
+    `;
+}
 
 // ========== COOKIE СОГЛАСИЕ ==========
 function showCookieConsent() {
@@ -199,6 +314,7 @@ function showCookieConsent() {
       localStorage.removeItem("userLotteryHistory");
       localStorage.removeItem("userLotteryRatings");
       localStorage.removeItem("userPreferences");
+      localStorage.removeItem("comparisonList");
       cookieBanner.style.display = "none";
     });
 }
@@ -329,7 +445,7 @@ function openLottery(url, lotteryName) {
   recordLotteryClick(lotteryName);
   window.open(url, "_blank");
 
-  // Показать модальное окно оценки через 3 секунды
+  // Показывать модальное окно оценки через 3 секунды
   setTimeout(() => {
     showRatingModal(lotteryName);
   }, 3000);
@@ -599,7 +715,6 @@ function getLotteryIcon(type) {
 }
 
 // Основная функция: отрендерить лотереи с учетом истории и фильтров
-// Основная функция: отрендерить лотереи с учетом истории и фильтров
 function renderAdaptiveLotteries() {
   const grid = document.getElementById("lotteriesGrid");
   grid.innerHTML = "";
@@ -684,10 +799,18 @@ function renderAdaptiveLotteries() {
                       lottery.url
                     }', '${lottery.name}')">Купить билет</button>
                 </div>
+                <!-- Контейнер для кнопки сравнения (появляется при наведении) -->
+                <div class="compare-hover-container">
+                    ${createCompareButtonHTML(lottery.name)}
+                </div>
             </div>
         `;
+
     grid.appendChild(card);
   });
+
+  // Обновляем UI сравнения после рендера
+  updateComparisonUI();
 }
 
 function filterByCategory(element) {
@@ -699,6 +822,7 @@ function filterByCategory(element) {
   const filter = element.textContent.trim().split(" ").pop().toLowerCase();
   renderAdaptiveLotteries();
 }
+
 let currentVisibleCount = 7;
 
 function showMoreInstantLotteries() {
@@ -721,6 +845,7 @@ function showMoreInstantLotteries() {
     showMoreContainer.classList.add("hidden");
   }
 }
+
 // ========== МОДАЛЬНЫЕ ОКНА ==========
 // Показ модального окна
 function showModal(modalId) {
@@ -792,6 +917,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 // Инициализация
 document.addEventListener("DOMContentLoaded", () => {
   // Показываем согласие на cookies
@@ -811,4 +937,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderAdaptiveLotteries();
   renderUserRatingsSection();
+  updateComparisonUI(); // Инициализируем UI сравнения
 });

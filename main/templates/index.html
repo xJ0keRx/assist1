@@ -3,17 +3,18 @@
 {% block title %} Основная страница {% endblock %}
 
 {% block body-start %}
+
 <body class="main-page">
-{% endblock %}
-{% block content %}
-<main>
-    
+    {% endblock %}
+    {% block content %}
+    <main>
+
         <div class="container">
             <!-- Героическая секция с поиском (Booking-стиль) -->
             <section class="hero-search">
                 <h1> Найдите свою удачу</h1>
                 <p>Система умного подбора анализирует вашу историю и рекомендует лучшие лотереи</p>
-                
+
                 <div class="search-filters booking-style">
                     <div class="filter-group">
                         <label>Тип лотереи</label>
@@ -48,16 +49,16 @@
                 </div>
             </section>
             <div class="modal-overlay" id="welcomeModal">
-    <div class="modal-content">
-        <div class="modal-glow"></div>
-        <h2 class="modal-title">Добро пожаловать!</h2>
-        <p class="modal-subtitle">Вы новый пользователь нашего сервиса?</p>
-        <div class="modal-actions">
-            <button class="btn btn-primary" id="newUserBtn">Да, я новичок</button>
-            <button class="btn btn-outline" id="oldUserBtn">Нет, я уже здесь был</button>
-        </div>
-    </div>
-</div>
+                <div class="modal-content">
+                    <div class="modal-glow"></div>
+                    <h2 class="modal-title">Добро пожаловать!</h2>
+                    <p class="modal-subtitle">Вы новый пользователь нашего сервиса?</p>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="newUserBtn">Да, я новичок</button>
+                        <button class="btn btn-outline" id="oldUserBtn">Нет, я уже здесь был</button>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -94,67 +95,98 @@
                     </div>
                 </div>
             </section>
+            {% if questionnaire_completed and recommendations %}
+            <section class="recommendations-main-section">
+                <h2 class="section-title">🎯 Персональные рекомендации</h2>
+                <p class="section-subtitle">Подобрано специально для вас на основе ваших предпочтений</p>
+
+                <div class="recommendations-grid">
+                    {% for lottery in recommendations %}
+                    <div class="recommendation-lottery-card"
+                        onclick="openLottery('{{ lottery.href }}', '{{ lottery.name }}')">
+                        <div class="recommendation-match-badge">
+                            Совпадение: {{ lottery.match_percentage }}%
+                        </div>
+                        <div class="recommendation-card-content">
+                            {% if lottery.preview_img %}
+                            <img src="{{ lottery.preview_img }}" alt="{{ lottery.name }}" class="recommendation-image">
+                            {% endif %}
+                            <div class="recommendation-info">
+                                <h3 class="recommendation-name">{{ lottery.name }}</h3>
+                                <div class="recommendation-details">
+                                    <span class="recommendation-price">{{ lottery.bet_cost }}</span>
+                                    <span class="recommendation-jackpot">{{ lottery.super_prize }}</span>
+                                </div>
+                                <div class="recommendation-type">{{ lottery.game_type }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
 
             <section>
                 <h2 class="section-title">Популярные лотереи</h2>
-                <div class="lotteries-grid" id="lotteriesGrid">
+                <div class="lotteries-grid" id="lotteriesGrid" data-lotteries="{{ lotteries_json }}">
                 </div>
             </section>
 
-<!-- Моментальные лотереи -->
-<section>
-    <h2 class="section-title">Моментальные лотереи</h2>
-    <div class="instant-images-grid" id="instantLotteriesGrid">
-        <!-- Карточки моментальных лотерей -->
-        {% for el in result %}
-        <div class="instant-image-card" onclick="openLottery('https://www.stoloto.ru/map/buy', '{{el.name}}')">
-            <div class="instant-image-container">
-                <img src="{{ el.preview_img }}" alt="{{el.name}}" class="instant-img">
-                <div class="instant-price-badge">{{ el.bet_cost }}</div>
-            </div>
+            <!-- Моментальные лотереи -->
+            <section>
+                <h2 class="section-title">Моментальные лотереи</h2>
+                <div class="instant-images-grid" id="instantLotteriesGrid">
+                    <!-- Карточки моментальных лотерей -->
+                    {% for el in result %}
+                    <div class="instant-image-card"
+                        onclick="openLottery('https://www.stoloto.ru/map/buy', '{{el.name}}')">
+                        <div class="instant-image-container">
+                            <img src="{{ el.preview_img }}" alt="{{el.name}}" class="instant-img">
+                            <div class="instant-price-badge">{{ el.bet_cost }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="show-more-container" id="showMoreContainer">
+                    <button class="btn btn-outline show-more-btn" onclick="showMoreInstantLotteries()" id="showMoreBtn">
+                        Показать еще
+                    </button>
+                </div>
+            </section>
         </div>
-        {% endfor %}
-    </div>
-    
-    <div class="show-more-container" id="showMoreContainer">
-        <button class="btn btn-outline show-more-btn" onclick="showMoreInstantLotteries()" id="showMoreBtn">
-            Показать еще
-        </button>
-    </div>
-</section>
-    </div>
-</section>
+        </section>
 
-            <!-- Рекомендации -->
-            <section class="recommendations-section">
-                <h2 class="section-title">Смешанные предложения</h2>
-                <div class="recommendation-grid">
-                    <div class="recommendation-card">
-                        <div class="recommendation-icon">📊</div>
-                        <div class="recommendation-text">Аналитика</div>
-                        <div class="recommendation-desc">Просмотр статистики выигрышей</div>
-                    </div>
-                    <div class="recommendation-card">
-                        <div class="recommendation-icon">🎰</div>
-                        <div class="recommendation-text">Автоподбор</div>
-                        <div class="recommendation-desc">ИИ подберет лучший вариант</div>
-                    </div>
-                    <div class="recommendation-card">
-                        <div class="recommendation-icon">🏆</div>
-                        <div class="recommendation-text">Топ Выигрыши</div>
-                        <div class="recommendation-desc">Самые крупные выигрыши сегодня</div>
-                    </div>
-                    <div class="recommendation-card">
-                        <div class="recommendation-icon">⏰</div>
-                        <div class="recommendation-text">Расписание</div>
-                        <div class="recommendation-desc">Время розыгрышей лотерей</div>
-                    </div>
+        <!-- Рекомендации -->
+        <section class="recommendations-section">
+            <h2 class="section-title">Смешанные предложения</h2>
+            <div class="recommendation-grid">
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">📊</div>
+                    <div class="recommendation-text">Аналитика</div>
+                    <div class="recommendation-desc">Просмотр статистики выигрышей</div>
                 </div>
-            </section>
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🎰</div>
+                    <div class="recommendation-text">Автоподбор</div>
+                    <div class="recommendation-desc">ИИ подберет лучший вариант</div>
+                </div>
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🏆</div>
+                    <div class="recommendation-text">Топ Выигрыши</div>
+                    <div class="recommendation-desc">Самые крупные выигрыши сегодня</div>
+                </div>
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">⏰</div>
+                    <div class="recommendation-text">Расписание</div>
+                    <div class="recommendation-desc">Время розыгрышей лотерей</div>
+                </div>
+            </div>
+        </section>
         </div>
     </main>
 
-{% endblock %}
-{% block js %}
-<script src="{% static 'main/js/index.js' %}"></script>
-{% endblock %}
+    {% endblock %}
+    {% block js %}
+    <script src="{% static 'main/js/index.js' %}"></script>
+    {% endblock %}

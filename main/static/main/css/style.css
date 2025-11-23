@@ -100,7 +100,7 @@ body {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  /* color: transparent; */
   letter-spacing: -0.5px;
   text-transform: uppercase;
 }
@@ -854,7 +854,7 @@ main {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  /* color: transparent; */
   margin-bottom: 0.5rem;
 }
 
@@ -1252,4 +1252,211 @@ main {
   .page-title {
     font-size: 1.4rem;
   }
+}
+.recommendations-main-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    border-radius: 20px;
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.recommendation-lottery-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.recommendation-lottery-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+}
+
+.recommendation-match-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--success), #10b981);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.recommendation-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.recommendation-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.recommendation-info {
+    flex: 1;
+}
+
+.recommendation-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.recommendation-details {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.recommendation-price {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.recommendation-jackpot {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.recommendation-type {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: capitalize;
+}
+/* Стили для функционала сравнения */
+.compare-btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.compare-btn.hidden {
+    display: none !important;
+}
+
+.compare-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-color: var(--primary);
+}
+
+.compare-btn.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Стили для кнопки сравнения при наведении */
+.lottery-card {
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.compare-hover-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.lottery-card:hover .compare-hover-container {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.compare-btn.hover-only {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.compare-btn.hover-only:hover {
+    
+    transform: scale(1.05);
+}
+
+.compare-btn.hover-only.active {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.compare-btn.hover-only.active:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Стили для таблицы сравнения */
+.comparison-table {
+    overflow-x: auto;
+}
+
+.comparison-table table {
+    min-width: 600px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .compare-hover-container {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+    
+    .compare-btn.hover-only {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+    }
 }
