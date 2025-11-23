@@ -165,30 +165,6 @@ function showComparisonModal() {
                             `).join('')}
                         </tr>
                         <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Шанс выигрыша</td>
-                            ${comparedLotteries.map(lottery => `
-                                <td style="padding: 1rem; text-align: center; color: var(--text);">
-                                    ${lottery.probability}
-                                </td>
-                            `).join('')}
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Рейтинг</td>
-                            ${comparedLotteries.map(lottery => `
-                                <td style="padding: 1rem; text-align: center; color: var(--text);">
-                                    ${lottery.rating} ⭐
-                                </td>
-                            `).join('')}
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
-                            <td style="padding: 1rem; color: var(--text-secondary);">Тип</td>
-                            ${comparedLotteries.map(lottery => `
-                                <td style="padding: 1rem; text-align: center; color: var(--text);">
-                                    ${lottery.type}
-                                </td>
-                            `).join('')}
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(99, 102, 241, 0.1);">
                             <td style="padding: 1rem; color: var(--text-secondary);">Частота розыгрышей</td>
                             ${comparedLotteries.map(lottery => `
                                 <td style="padding: 1rem; text-align: center; color: var(--text);">
@@ -416,29 +392,6 @@ function saveUserPreferences(prefs) {
   setStorage("userPreferences", prefs);
 }
 
-// ========== ФИЛЬТРАЦИЯ И АДАПТАЦИЯ ==========
-function applyFilters() {
-  const typeFilter = document.getElementById("filterType").value;
-  const priceFilter = document.getElementById("filterPrice").value;
-  const frequencyFilter = document.getElementById("filterFrequency").value;
-
-  const prefs = {
-    types: typeFilter ? [typeFilter] : [],
-    prices: priceFilter ? [priceFilter] : [],
-    frequencies: frequencyFilter ? [frequencyFilter] : [],
-  };
-  saveUserPreferences(prefs);
-
-  renderAdaptiveLotteries();
-}
-
-// Получить цену в число для фильтрации
-function getPriceRange(priceString) {
-  if (priceString === "50-100") return { min: 50, max: 100 };
-  if (priceString === "100-200") return { min: 100, max: 200 };
-  if (priceString === "200+") return { min: 200, max: 10000 };
-  return { min: 0, max: 10000 };
-}
 
 // Открыть лотерею в новой вкладке
 function openLottery(url, lotteryName) {
@@ -767,29 +720,6 @@ function renderAdaptiveLotteries() {
                         <span class="stat-label">Джекпот</span>
                         <span class="stat-value">${lottery.jackpot}</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Шанс</span>
-                        <span class="stat-value">${lottery.probability}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Рейтинг</span>
-                        <span class="stat-value">${lottery.rating} ⭐</span>
-                    </div>
-                </div>
-                <div class="lottery-rating">
-                    <div class="stars">
-                        ${[...Array(5)]
-                          .map(
-                            (_, i) =>
-                              `<span class="star">${
-                                i < Math.floor(lottery.rating) ? "★" : "☆"
-                              }</span>`
-                          )
-                          .join("")}
-                    </div>
-                    <span class="rating-count">${Math.floor(
-                      lottery.rating * 1000
-                    )} оценок</span>
                 </div>
                 <div class="lottery-actions">
                     <button class="btn btn-secondary" onclick="openLottery('${
@@ -872,12 +802,12 @@ function markUserAsReturning() {
 // Инициализация модальных окон при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     // Проверяем, новый ли пользователь
-    if (isNewUser()) {
+    
         // Показываем приветственное окно для новых пользователей
         setTimeout(() => {
             showModal('welcomeModal');
         }, 1200);
-    }
+    
 
     // Обработчики для модального окна приветствия
     document.getElementById('newUserBtn').addEventListener('click', function () {
@@ -939,3 +869,286 @@ document.addEventListener("DOMContentLoaded", () => {
   renderUserRatingsSection();
   updateComparisonUI(); // Инициализируем UI сравнения
 });
+
+function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    if (searchTerm) {
+        // Здесь можно добавить логику поиска
+        alert(`Поиск: ${searchTerm}`);
+        // В будущем можно добавить фильтрацию лотерей по поисковому запросу
+    }
+}
+
+// Обработчик нажатия Enter в поле поиска
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// ========== ФУНКЦИОНАЛ ПОИСКА ==========
+
+// Выполнение поиска
+function performSearch() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    
+    if (!searchTerm) {
+        alert('Введите поисковый запрос');
+        return;
+    }
+    
+    // Показываем индикатор загрузки
+    showSearchLoading(true);
+    
+    // Выполняем AJAX запрос к серверу
+    fetch(`/api/search/?q=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+            showSearchLoading(false);
+            
+            if (data.success) {
+                displaySearchResults(data.results, searchTerm);
+            } else {
+                alert('Ошибка поиска: ' + data.error);
+            }
+        })
+        .catch(error => {
+            showSearchLoading(false);
+            console.error('Ошибка поиска:', error);
+            alert('Произошла ошибка при поиске');
+        });
+}
+
+// Показать/скрыть индикатор загрузки
+function showSearchLoading(show) {
+    const searchBox = document.querySelector('.hero-search-box');
+    const existingLoader = searchBox.querySelector('.search-loading');
+    
+    if (show) {
+        if (!existingLoader) {
+            const loader = document.createElement('div');
+            loader.className = 'search-loading';
+            loader.innerHTML = '🔍 Поиск...';
+            loader.style.cssText = `
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(30, 41, 59, 0.95);
+                padding: 0.5rem;
+                border-radius: 8px;
+                margin-top: 5px;
+                text-align: center;
+                color: var(--text);
+                z-index: 1000;
+            `;
+            searchBox.style.position = 'relative';
+            searchBox.appendChild(loader);
+        }
+    } else {
+        if (existingLoader) {
+            existingLoader.remove();
+        }
+    }
+}
+
+// Отображение результатов поиска
+function displaySearchResults(results, searchTerm) {
+    // Создаем модальное окно для результатов
+    const modal = document.createElement('div');
+    modal.className = 'search-results-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        z-index: 10000;
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        overflow-y: auto;
+    `;
+
+    if (results.length === 0) {
+        modal.innerHTML = `
+            <div class="search-results-card" style="
+                background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
+                border: 2px solid rgba(99, 102, 241, 0.4);
+                border-radius: 20px;
+                padding: 3rem;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                margin-top: 10vh;
+            ">
+                <h3 style="
+                    font-family: 'Orbitron', sans-serif;
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    background: linear-gradient(135deg, var(--primary), var(--secondary));
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                ">Ничего не найдено</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    По запросу "<strong>${searchTerm}</strong>" ничего не найдено.
+                </p>
+                <button class="btn btn-primary close-search-results" style="padding: 0.75rem 1.5rem;">
+                    Закрыть
+                </button>
+            </div>
+        `;
+    } else {
+        modal.innerHTML = `
+            <div class="search-results-card" style="
+                background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
+                border: 2px solid rgba(99, 102, 241, 0.4);
+                border-radius: 20px;
+                padding: 2rem;
+                max-width: 800px;
+                width: 100%;
+                margin-top: 5vh;
+                max-height: 80vh;
+                overflow-y: auto;
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="
+                        font-family: 'Orbitron', sans-serif;
+                        font-size: 1.5rem;
+                        background: linear-gradient(135deg, var(--primary), var(--secondary));
+                        -webkit-background-clip: text;
+                        background-clip: text;
+                        color: transparent;
+                    ">
+                        Результаты поиска
+                    </h3>
+                    <span style="color: var(--text-secondary);">
+                        Найдено: ${results.length}
+                    </span>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: var(--text-secondary);">
+                        По запросу: "<strong style="color: var(--text);">${searchTerm}</strong>"
+                    </p>
+                </div>
+                
+                <div class="search-results-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                    ${results.map((lottery, index) => `
+                        <div class="search-result-item" style="
+                            background: rgba(255, 255, 255, 0.05);
+                            border: 1.5px solid rgba(99, 102, 241, 0.2);
+                            border-radius: 12px;
+                            padding: 1.5rem;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        " onclick="openLottery('${lottery.url}', '${lottery.name}')">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h4 style="
+                                        color: var(--text);
+                                        margin-bottom: 0.5rem;
+                                        font-family: 'Orbitron', sans-serif;
+                                    ">${lottery.display_name}</h4>
+                                    <div style="display: flex; gap: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                                        <span>Тип: ${lottery.type}</span>
+                                        <span>Джекпот: ${lottery.jackpot || 'Не указан'}</span>
+                                    </div>
+                                </div>
+                                ${lottery.is_duplicate ? `
+                                    <div style="
+                                        background: rgba(245, 158, 11, 0.2);
+                                        color: #f59e0b;
+                                        padding: 0.3rem 0.6rem;
+                                        border-radius: 6px;
+                                        font-size: 0.8rem;
+                                        font-weight: 600;
+                                    ">
+                                        Дубликат
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                    <button class="btn btn-outline close-search-results" style="padding: 0.75rem 1.5rem;">
+                        Закрыть
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    document.body.appendChild(modal);
+
+    // Обработчики событий
+    modal.querySelector('.close-search-results').addEventListener('click', function() {
+        modal.remove();
+    });
+
+    // Закрытие по клику на оверлей
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Закрытие по Escape
+    modal.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            modal.remove();
+        }
+    });
+}
+
+// ========== ОБНОВЛЕННАЯ ИНИЦИАЛИЗАЦИЯ ==========
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Показываем согласие на cookies
+    showCookieConsent();
+    
+    const instantCards = document.querySelectorAll(".instant-image-card");
+    const showMoreContainer = document.getElementById("showMoreContainer");
+    instantCards.forEach((card, index) => {
+        if (index >= 7) {
+            card.style.display = "none";
+        }
+    });
+
+    // Скрываем кнопку если карточек меньше 7
+    if (instantCards.length <= 7) {
+        showMoreContainer.classList.add("hidden");
+    }
+
+    renderAdaptiveLotteries();
+    renderUserRatingsSection();
+    updateComparisonUI();
+
+    // Обработчик нажатия Enter в поле поиска
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    // Обработчик изменения в поле поиска (опционально - можно сделать live search)
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        // Здесь можно добавить live search с debounce
+        // const query = e.target.value.trim();
+        // if (query.length >= 2) {
+        //     performLiveSearch(query);
+        // }
+    });
+});
+
+// Функция для live search (опционально)
+function performLiveSearch(query) {
+    // Аналогично performSearch, но с debounce и без модального окна
+    // Можно показывать результаты прямо под поисковой строкой
+}

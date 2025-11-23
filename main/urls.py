@@ -7,4 +7,5 @@ urlpatterns = [
     path('compare', views.compare, name='compare'),
     path('process-questionnaire/', views.process_questionnaire, name='process_questionnaire'),
     path('api/recommendations/', views.get_recommendations, name='api_recommendations'),
+    path('api/search/', views.search_lotteries, name='api_search'),  # Новый маршрут для поиска
 ]
