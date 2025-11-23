@@ -7,6 +7,7 @@ function getLotteriesData() {
 }
 
 const lotteries = getLotteriesData();
+
 // ========== ФУНКЦИОНАЛ СРАВНЕНИЯ ==========
 
 // Получить список лотерей для сравнения
@@ -392,7 +393,6 @@ function saveUserPreferences(prefs) {
   setStorage("userPreferences", prefs);
 }
 
-
 // Открыть лотерею в новой вкладке
 function openLottery(url, lotteryName) {
   recordLotteryClick(lotteryName);
@@ -667,41 +667,13 @@ function getLotteryIcon(type) {
   return icons[type] || "🎲";
 }
 
-// Основная функция: отрендерить лотереи с учетом истории и фильтров
+// Основная функция: отрендерить лотереи в исходном порядке
 function renderAdaptiveLotteries() {
   const grid = document.getElementById("lotteriesGrid");
   grid.innerHTML = "";
 
-  const typeFilter = document.getElementById("filterType").value;
-  const priceFilter = document.getElementById("filterPrice").value;
-  const frequencyFilter = document.getElementById("filterFrequency").value;
-  const history = getUserHistory();
-  const userRatings = getUserRatings();
-
-  // Применить фильтры
-  let filtered = lotteries.filter((lottery) => {
-    if (typeFilter && lottery.type !== typeFilter) return false;
-    if (frequencyFilter && lottery.frequency !== frequencyFilter) return false;
-
-    if (priceFilter) {
-      const range = getPriceRange(priceFilter);
-      if (lottery.price < range.min || lottery.price > range.max) return false;
-    }
-
-    return true;
-  });
-
-  filtered.sort((a, b) => {
-    const countA = history[a.name] || 0;
-    const countB = history[b.name] || 0;
-
-    if (countA !== countB) return countB - countA;
-    return b.rating - a.rating;
-  });
-
-  filtered.forEach((lottery) => {
-    const playCount = history[lottery.name] || 0;
-
+  // Просто рендерим все лотереи в том порядке, в котором они пришли
+  lotteries.forEach((lottery) => {
     const card = document.createElement("div");
     card.className = "lottery-card";
 
@@ -749,7 +721,8 @@ function filterByCategory(element) {
     .forEach((badge) => badge.classList.remove("active"));
   element.classList.add("active");
 
-  const filter = element.textContent.trim().split(" ").pop().toLowerCase();
+  // Теперь категории просто меняют активное состояние, но не влияют на отображение
+  // Можно оставить для визуального оформления или полностью удалить функционал
   renderAdaptiveLotteries();
 }
 
@@ -802,12 +775,11 @@ function markUserAsReturning() {
 // Инициализация модальных окон при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     // Проверяем, новый ли пользователь
-    
         // Показываем приветственное окно для новых пользователей
         setTimeout(() => {
             showModal('welcomeModal');
         }, 1200);
-    
+      
 
     // Обработчики для модального окна приветствия
     document.getElementById('newUserBtn').addEventListener('click', function () {
@@ -846,44 +818,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-});
-
-// Инициализация
-document.addEventListener("DOMContentLoaded", () => {
-  // Показываем согласие на cookies
-  showCookieConsent();
-  const instantCards = document.querySelectorAll(".instant-image-card");
-  const showMoreContainer = document.getElementById("showMoreContainer");
-  instantCards.forEach((card, index) => {
-    if (index >= 7) {
-      card.style.display = "none";
-    }
-  });
-
-  // Скрываем кнопку если карточек меньше 7
-  if (instantCards.length <= 7) {
-    showMoreContainer.classList.add("hidden");
-  }
-
-  renderAdaptiveLotteries();
-  renderUserRatingsSection();
-  updateComparisonUI(); // Инициализируем UI сравнения
-});
-
-function performSearch() {
-    const searchTerm = document.getElementById('searchInput').value.trim();
-    if (searchTerm) {
-        // Здесь можно добавить логику поиска
-        alert(`Поиск: ${searchTerm}`);
-        // В будущем можно добавить фильтрацию лотерей по поисковому запросу
-    }
-}
-
-// Обработчик нажатия Enter в поле поиска
-document.getElementById('searchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        performSearch();
-    }
 });
 
 // ========== ФУНКЦИОНАЛ ПОИСКА ==========
@@ -1098,6 +1032,7 @@ function displaySearchResults(results, searchTerm) {
             modal.remove();
         }
     });
+    
 
     // Закрытие по Escape
     modal.addEventListener('keydown', function(e) {
@@ -1152,3 +1087,9 @@ function performLiveSearch(query) {
     // Аналогично performSearch, но с debounce и без модального окна
     // Можно показывать результаты прямо под поисковой строкой
 }
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+  }
+)
